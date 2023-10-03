@@ -20,10 +20,10 @@ export class UserServices {
   async createUser(data) {
     return await User.create(data);
   }
-  async updateUser(user, data) {
+  async updateUser(User, data) {
     return await User.update(data);
   }
-  async deleteUser(user) {
-    return await user.update({ status: disabled });
+  async deleteUser(User) {
+    return await User.update({ status: disabled });
   }
 }

@@ -4,7 +4,7 @@ const userservice = new UserServices()
 
 export const findAllUsers = async (req,res) =>{
     try {
-        const users = await userservice.findAllUsers
+        const users = await userservice.findAllUsers()
         return res.json(users)
     } catch (error) {
         return res.status(500).json(error)
@@ -13,7 +13,7 @@ export const findAllUsers = async (req,res) =>{
 
 export const createUser = async(req, res) => {
   try { 
-    const user = await userservice.createUser(userData)
+    const user = await userservice.createUser(req.body)
     return res.status(201).json(user)
   } catch (error) {
     return res.status(500).json(error)
@@ -50,7 +50,7 @@ export const updateUser = async(req, res) => {
           message: `passenger with id ${ id } not found`
         })
       }
-      const updatedUser = await userservice.updateUser(user, userData)
+      const updatedUser = await userservice.updateUser(user, req.body)
       return res.json(updatedUser)
     } catch (error) {
       return res.status(500).json(error)
