@@ -8,6 +8,8 @@ import {
   deleteUser,
 } from "./users.controller.js";
 
+import { ValidateExistingUser } from "./users.middleware.js";
+
 export const router = Router();
 
 router
@@ -16,6 +18,7 @@ router
   .post(createUser);
 
 router
+  .use("/:id",ValidateExistingUser)
   .route("/:id")
   .get(findOneUser)
   .patch(updateUser)

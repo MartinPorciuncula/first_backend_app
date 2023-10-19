@@ -18,6 +18,15 @@ const Repairs = sequelize.define('repairs', {
         allowNull: false,
         defaultValue: 'pending'
     },
+    motorsNumber: {
+        type: DataTypes.STRING,
+        allowNull:false,
+        field:"motor_number"
+    },
+    description: {
+       type: DataTypes.STRING,
+       allowNull:false,
+    },
     createdBy: {
         type: DataTypes.INTEGER,
         allowNull: false,
