@@ -1,15 +1,15 @@
 import { Router } from "express";
-import {
-    createRepair,
-    findOne,
-    findPending
-} from './repairs.controller.js'
+import { createRepair, findOne, findPending } from "./repairs.controller.js";
 
-export const router = Router()
+import { validatingStatusPending } from "./repairs.middleware.js";
 
-router.route('/')
-    .get(findPending)
-    .post(createRepair)
+export const router = Router();
 
-router.route('/:id')
-    .get(findOne)
+router.route("/")
+.get(findPending)
+.post(createRepair);
+
+router
+.use("/:id", validatingStatusPending)
+.route("/:id")
+.get(findOne);

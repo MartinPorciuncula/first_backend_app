@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/database/database.js";
+import {sequelize} from "../config/database/database.js"
 
 const Repairs = sequelize.define('repairs', {
     id: {
@@ -26,6 +26,11 @@ const Repairs = sequelize.define('repairs', {
     description: {
        type: DataTypes.STRING,
        allowNull:false,
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull:false,
+        field:"User_Id",
     },
     createdBy: {
         type: DataTypes.INTEGER,

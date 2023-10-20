@@ -26,16 +26,7 @@ export const createRepair = async (req, res) => {
 export const findOne = async (req, res) => {
 
     try {
-        const { id } = req.params
-
-        const repair = await repairService.findOneRepair(id)
-
-        if (!repair) {
-            return res.status(404).json({
-                status: 'error',
-                message: `Repair whit id ${id} not found`
-            })
-        }
+        const {repair} = req;
 
         return res.json(repair)
     } catch (error) {

@@ -1,6 +1,7 @@
 import { UserServices } from "./users_service.js";
 import {
   validatePartialUser,
+  validateRegister,
   validateUser,
 } from "./users.schema.js";
 
@@ -71,6 +72,28 @@ export const deleteUser = async (req, res) => {
     await userService.deleteUser(user);
 
     return res.status(204).json(null);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+export const login = async(req,res) => {
+
+}
+
+export const register = async (req, res) => {
+ 
+  const { hasError, errorMessages, userData } = validatePartialUser(req.body)
+ 
+   if(hasError){
+    return res.status(422).json({
+      status: "error",
+      message: errorMessages
+    })
+   }
+  try {
+    const user = await userService.createRegisterUser(userData);
+    return res.status(201).json(user);
   } catch (error) {
     return res.status(500).json(error);
   }

@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize'
 import { envs } from '../enviroments/enviroments.js';
 
-const sequelize = new Sequelize(envs.DB_URI, {
+export const sequelize = new Sequelize(envs.DB_URI, {
   logging: false
 })
 
@@ -23,5 +23,3 @@ export async function syncUp(){
     throw new Error('Error al sincronizar: ', error)
   }
 }
-
-export default sequelize

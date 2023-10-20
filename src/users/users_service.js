@@ -25,4 +25,10 @@ export class UserServices {
   async deleteUser(User) {
     return await User.update({ status: "disabled" });
   }
+
+  async createRegisterUser(data){
+  return await User.create(data)
+  }
 }
+
+
