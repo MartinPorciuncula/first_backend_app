@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {login,register} from "./users.controller.js"
 import { changePassword } from "./users.controller.js";
+import { protect } from "./users.middleware.js";
 import {
  findAllUsers,
  createUser,
@@ -13,12 +14,15 @@ import { ValidateExistingUser } from "./users.middleware.js";
 
 export const router = Router();
 
+router.use(protect)
+
 router.post('/login', login)
 router.post("/register",register)
-router.patch("change-password", changePassword)
+router.patch('/change-password',changePassword)
+
 router
   .route("/")
-  .get(findAllUsers)
+  .get(protect,findAllUsers)
   .post(createUser);
   
 router

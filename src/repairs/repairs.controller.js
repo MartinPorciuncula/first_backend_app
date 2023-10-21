@@ -15,6 +15,16 @@ export const findPending = async (_, res) => {
 export const createRepair = async (req, res) => {
 
     try {
+
+        const { hasError, errorMessages, repairData } = validateRepair(req.body)
+
+        if (hasError) {
+            return res.status(422).json({
+                status: 'error',
+                message: errorMessages
+            })
+        }
+
         const repair = await repairService.createRepair(req.body)
 
         return res.status(201).json(repair)
@@ -29,6 +39,58 @@ export const findOne = async (req, res) => {
         const {repair} = req;
 
         return res.json(repair)
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
+export const updateRepair = async (req, res) => {
+    try {
+
+        const { hasError, errorMessages, dataRepair } = validatePartialRepair(req.body)
+
+        if (hasError) {
+            return res.status(422).json({
+                status: 'error',
+                message: errorMessages
+            })
+        }
+
+        const { id } = req.params
+
+        const repair = await repairService.findOneRepair(id)
+
+        if (!repair) {
+            return res.status(404).json({
+                status: 'error',
+                message: `Repair whit id ${id} not found`
+            })
+        }
+
+        const updateRepair = await repairService.updateRepair(repair, dataRepair)
+
+        return res.json(updateRepair)
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
+export const deleteRepair = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        const repair = await repairService.findOneRepair(id)
+
+        if (!repair) {
+            return res.status(404).json({
+                status: 'error',
+                message: `Repair whit id ${id} not found`
+            })
+        }
+
+        await repairService.deleteRepair(repair)
+
+        return res.status(204).json(null)
     } catch (error) {
         return res.status(500).json(error)
     }

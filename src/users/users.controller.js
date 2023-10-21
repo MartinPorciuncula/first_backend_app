@@ -158,42 +158,43 @@ export const register = async (req, res) => {
   }
 };
 
-export const changePassword = async(req,res) =>{
+export const changePassword = async (req, res) => {
+
   try {
+      const { sessionUser } = req;
 
-    const {user} = req;
 
-    const {currentPassword, newPassword} = req.body
+      const { currentPassword, newPassword } = req.body;
 
-    if(currentPassword = newPassword){
-      return res.status(400).json({
-        status: "error",
-        message: "Passwords cannot be equals"
+      if (currentPassword === newPassword) {
+          return res.status(400).json({
+              status: 'error',
+              message: 'The password canont be equals'
+          })
+      }
+
+      const isCorrectPassword = await verifyPassword(
+          currentPassword,
+          sessionUser.password
+      )
+
+      if (!isCorrectPassword) {
+          return res.status(401).json({
+              status: 'error',
+              message: 'Incorrect email or password'
+          })
+      }
+
+      const hashedNewPassword = await encryptedPassword(newPassword)
+
+      await userService.updatePassword(sessionUser, {
+          password: hashedNewPassword
       })
-    }
 
-    const isCorrectPassword = await verifyPassword(
-      currentPassword, 
-      user.password
-     )
-
-     if(!isCorrectPassword){
-      return res.status(401).json({
-        status:"error",
-        message:"Incorrect email or password :("
+      return res.status(200).json({
+          message: 'The user password was updated succesfully'
       })
-     }
-
-     const hashedNewPassword = await encryptedPassword(newPassword)
-
-     await userService.updateUser(user,{
-      password: hashedNewPassword
-     })
-     return res.status(200).json({
-      message: "The password has been updated succesfully :)"
-     })
-
   } catch (error) {
-    return res.status(500).json(error);
+      return res.status(500).json(error)
   }
 }
