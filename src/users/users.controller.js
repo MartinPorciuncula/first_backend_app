@@ -1,9 +1,12 @@
 import { UserServices } from "./users_service.js";
 import {
+  validateLogin,
   validatePartialUser,
   validateRegister,
   validateUser,
 } from "./users.schema.js";
+import generateJWT from "../plugins/generate-jwt-plugin.js"
+import { encryptedPassword, verifyPassword } from "../plugins/encrypted-password-plugin.js";
 
 const userService = new UserServices();
 
@@ -78,11 +81,55 @@ export const deleteUser = async (req, res) => {
 };
 
 export const login = async(req,res) => {
+  try {
+    const {hasError,errorMessages,userData} = validateLogin(req.body)
+
+    if(hasError){
+      return res.status(422).json({
+        status: "error",
+        message: errorMessages
+      })
+     }
+     const user = await userService.findOneByEmail(userData.email)
+
+     if(!user){
+      return res.status(404).json({
+        status: "error",
+        message:"This account does not exist :("
+      })
+     }
+
+     const isCorrectPassword = await verifyPassword(
+      userData.password, user.password
+     )
+
+     if (!isCorrectPassword){
+       return res.status(401).json({
+        status: "error",
+        message:"Incorrect email or password"
+       })
+     }
+
+     const token = await generateJWT(user.id)
+
+     return res.status(201).json({
+      token,
+      user :{
+        id: user.id,
+        name : user.name,
+        email: user.email,
+        role: user.role
+      }
+  })
+
+  } catch (error) {
+    
+  }
 
 }
 
 export const register = async (req, res) => {
- 
+  try {
   const { hasError, errorMessages, userData } = validatePartialUser(req.body)
  
    if(hasError){
@@ -91,10 +138,62 @@ export const register = async (req, res) => {
       message: errorMessages
     })
    }
-  try {
+ 
+
     const user = await userService.createRegisterUser(userData);
-    return res.status(201).json(user);
+
+    const token = await generateJWT(user.id)
+
+    return res.status(201).json({
+        token,
+        user :{
+          id: user.id,
+          name : user.name,
+          email: user.email,
+          role: user.role
+        }
+    })
   } catch (error) {
     return res.status(500).json(error);
   }
 };
+
+export const changePassword = async(req,res) =>{
+  try {
+
+    const {user} = req;
+
+    const {currentPassword, newPassword} = req.body
+
+    if(currentPassword = newPassword){
+      return res.status(400).json({
+        status: "error",
+        message: "Passwords cannot be equals"
+      })
+    }
+
+    const isCorrectPassword = await verifyPassword(
+      currentPassword, 
+      user.password
+     )
+
+     if(!isCorrectPassword){
+      return res.status(401).json({
+        status:"error",
+        message:"Incorrect email or password :("
+      })
+     }
+
+     const hashedNewPassword = await encryptedPassword(newPassword)
+
+     await userService.updateUser(user,{
+      password: hashedNewPassword
+     })
+     return res.status(200).json({
+      message: "The password has been updated succesfully :)"
+     })
+
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+}

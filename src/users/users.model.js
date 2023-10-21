@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import {sequelize} from "../config/database/database.js";
+import { encryptedPassword } from "../plugins/encrypted-password-plugin.js";
 
 const User = sequelize.define("user", {
   id: {
@@ -36,6 +37,13 @@ const User = sequelize.define("user", {
     allowNull: false,
     defaultValue: "available",
   },
+},{
+  hooks: {
+    beforeCreate: async (user) => {
+      user.password = await encryptedPassword(user.password
+      )
+    }
+  }
 });
 
 export default User;

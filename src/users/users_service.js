@@ -29,6 +29,18 @@ export class UserServices {
   async createRegisterUser(data){
   return await User.create(data)
   }
+
+  async findOneByEmail(email){
+  return User.findOne({
+    where: {
+       email,
+       status: "available"
+    }
+  })
+  }
+
+  
+  
 }
 
 

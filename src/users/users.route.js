@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {login,register} from "./users.controller.js"
+import { changePassword } from "./users.controller.js";
 import {
  findAllUsers,
  createUser,
@@ -14,12 +15,12 @@ export const router = Router();
 
 router.post('/login', login)
 router.post("/register",register)
-
+router.patch("change-password", changePassword)
 router
   .route("/")
   .get(findAllUsers)
   .post(createUser);
-
+  
 router
   .use("/:id",ValidateExistingUser)
   .route("/:id")
