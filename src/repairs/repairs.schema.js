@@ -1,5 +1,5 @@
 import z from 'zod'
-import { extractValidationData } from '../common/utils/extractErrordata.js'
+import { extractValidationData } from '../commons/utils/extractErrorData.js'
 
 export const repairSchema = z.object({
     date: z.date({

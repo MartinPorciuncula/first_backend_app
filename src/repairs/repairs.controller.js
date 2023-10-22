@@ -1,3 +1,4 @@
+import { validatePartialRepair, validateRepair } from "./repairs.schema.js"
 import { RepairService } from "./repairs_service.js"
 
 const repairService = new RepairService()
@@ -54,18 +55,9 @@ export const updateRepair = async (req, res) => {
                 status: 'error',
                 message: errorMessages
             })
-        }
+        }     
 
-        const { id } = req.params
-
-        const repair = await repairService.findOneRepair(id)
-
-        if (!repair) {
-            return res.status(404).json({
-                status: 'error',
-                message: `Repair whit id ${id} not found`
-            })
-        }
+       const {repair} = req;
 
         const updateRepair = await repairService.updateRepair(repair, dataRepair)
 
@@ -77,20 +69,13 @@ export const updateRepair = async (req, res) => {
 
 export const deleteRepair = async (req, res) => {
     try {
-        const { id } = req.params
+        
 
-        const repair = await repairService.findOneRepair(id)
-
-        if (!repair) {
-            return res.status(404).json({
-                status: 'error',
-                message: `Repair whit id ${id} not found`
-            })
-        }
+        const {repair} = req;
 
         await repairService.deleteRepair(repair)
 
-        return res.status(204).json(null)
+        return res.status(204).json()
     } catch (error) {
         return res.status(500).json(error)
     }
