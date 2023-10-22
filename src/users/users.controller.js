@@ -7,6 +7,7 @@ import {
 } from "./users.schema.js";
 import generateJWT from "../plugins/generate-jwt-plugin.js"
 import { encryptedPassword, verifyPassword } from "../plugins/encrypted-password-plugin.js";
+import { AppError } from "../errors/appError.js";
 
 const userService = new UserServices();
 
@@ -37,7 +38,7 @@ export const createUser = async (req, res) => {
   }
 };
 
-export const findOneUser = async (req, res) => {
+export const findOneUser = async (req, res,next) => {
   try {
     const { user } = req;
     return res.json(user);
@@ -93,10 +94,7 @@ export const login = async(req,res) => {
      const user = await userService.findOneByEmail(userData.email)
 
      if(!user){
-      return res.status(404).json({
-        status: "error",
-        message:"This account does not exist :("
-      })
+      return next(new AppError("This account does not exist :(",404))
      }
 
      const isCorrectPassword = await verifyPassword(
@@ -167,10 +165,7 @@ export const changePassword = async (req, res) => {
       const { currentPassword, newPassword } = req.body;
 
       if (currentPassword === newPassword) {
-          return res.status(400).json({
-              status: 'error',
-              message: 'The password canont be equals'
-          })
+          return next (new AppError('The password canont be equals',400))
       }
 
       const isCorrectPassword = await verifyPassword(
@@ -179,10 +174,7 @@ export const changePassword = async (req, res) => {
       )
 
       if (!isCorrectPassword) {
-          return res.status(401).json({
-              status: 'error',
-              message: 'Incorrect email or password'
-          })
+          return next(new AppError('Incorrect email or password',401))
       }
 
       const hashedNewPassword = await encryptedPassword(newPassword)

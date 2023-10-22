@@ -1,4 +1,5 @@
 import { envs } from "../config/enviroments/enviroments.js";
+import { AppError } from "../errors/appError.js";
 import { UserServices } from "./users_service.js";
 import jwt from "jsonwebtoken";
 import { promisify } from "util";
@@ -11,10 +12,7 @@ export const ValidateExistingUser = async (req, res, next) => {
   const user = await userService.findOneUser(id);
 
   if (!user) {
-    return res.status(404).json({
-      status: "error",
-      message: `passenger with id ${id} not found`,
-    });
+    return next(new AppError(`user with id ${id} not found`,404))
   }
 
   req.user = user;
@@ -32,10 +30,7 @@ export const protect = async (req, res, next) => {
   }
 
   if (!token) {
-    return res.status(401).json({
-      status: "error",
-      message: "You are not logged in,please log in to continue <3",
-    });
+    returnnext(new AppError("You are not logged in,please log in to continue <3",401))
   }
 
   const decoded = await promisify(jwt.verify)(token, envs.SECRET_JWD_SEED);
@@ -43,10 +38,7 @@ export const protect = async (req, res, next) => {
   const user = await userService.findOneUser(decoded.id);
 
   if (!user) {
-    return res.status(401).json({
-      status: "error",
-      message: "This owner of this token is not longer available :(",
-    });
+    return next(new AppError("This owner of this token is not longer available :(",401))
   }
 
   req.sessionUser = user;
@@ -56,10 +48,7 @@ export const protect = async (req, res, next) => {
 export const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.sessionUser.role)) {
-      return res.status(403).json({
-        status: "error",
-        message: "You do not have permission to perform this action",
-      });
+     return next(new AppError("You do not have permission to perform this action",403))
     }
     next();
   };
