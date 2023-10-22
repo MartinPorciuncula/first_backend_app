@@ -18,7 +18,7 @@ export const repairSchema = z.object({
 })
 
 export function validateRepair(data) {
-    const result = userSchema.safeParse(data)
+    const result = repairSchema.safeParse(data)
 
     const {
         hasError,
@@ -35,7 +35,7 @@ export function validateRepair(data) {
 
 
 export function validatePartialRepair(data) {
-    const result = userSchema.partial().safeParse(data)
+    const result = repairSchema.partial().safeParse(data)
 
     const {
         hasError,

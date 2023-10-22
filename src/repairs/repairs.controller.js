@@ -47,9 +47,9 @@ export const updateRepair = catchAsync(async (req, res) => {
 
        const {repair} = req;
 
-        const updateRepair = await repairService.updateRepair(repair, dataRepair)
+        const updatedRepair = await repairService.updateRepair(repair, dataRepair)
 
-        return res.json(updateRepair)
+        return res.json(updatedRepair)
 
 })
 

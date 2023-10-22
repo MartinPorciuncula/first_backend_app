@@ -7,8 +7,7 @@ import {
 } from "./users.schema.js";
 import generateJWT from "../plugins/generate-jwt-plugin.js"
 import { encryptedPassword, verifyPassword } from "../plugins/encrypted-password-plugin.js";
-import { AppError } from "../errors/appError.js";
-import { catchAsync } from "../errors/catchAsync.js";
+import {AppError,catchAsync} from "../errors/index.js"
 const userService = new UserServices();
 
 export const findAllUsers = catchAsync(async (_, res) => {
@@ -41,7 +40,7 @@ export const findOneUser = catchAsync(async (req, res,next) => {
 
 export const updateUser = catchAsync(async(req, res) => {
  
-  const { hasError, errorMessages, passengerData } = validatePartialUser(req.body)
+  const { hasError, errorMessages, userData } = validatePartialUser(req.body)
  
    if(hasError){
     return res.status(422).json({

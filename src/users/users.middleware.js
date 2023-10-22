@@ -1,12 +1,13 @@
 import { envs } from "../config/enviroments/enviroments.js";
 import { AppError } from "../errors/appError.js";
+import { catchAsync } from "../errors/index.js";
 import { UserServices } from "./users_service.js";
 import jwt from "jsonwebtoken";
 import { promisify } from "util";
 
 const userService = new UserServices();
 
-export const ValidateExistingUser = async (req, res, next) => {
+export const ValidateExistingUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   const user = await userService.findOneUser(id);
@@ -17,9 +18,9 @@ export const ValidateExistingUser = async (req, res, next) => {
 
   req.user = user;
   next();
-};
+});
 
-export const protect = async (req, res, next) => {
+export const protect = catchAsync(async (req, res, next) => {
   let token;
 
   if (
@@ -43,7 +44,7 @@ export const protect = async (req, res, next) => {
 
   req.sessionUser = user;
   next();
-};
+});
 
 export const restrictTo = (...roles) => {
   return (req, res, next) => {
