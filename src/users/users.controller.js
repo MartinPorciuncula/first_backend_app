@@ -8,19 +8,17 @@ import {
 import generateJWT from "../plugins/generate-jwt-plugin.js"
 import { encryptedPassword, verifyPassword } from "../plugins/encrypted-password-plugin.js";
 import { AppError } from "../errors/appError.js";
-
+import { catchAsync } from "../errors/catchAsync.js";
 const userService = new UserServices();
 
-export const findAllUsers = async (_, res) => {
-  try {
+export const findAllUsers = catchAsync(async (_, res) => {
+ 
     const users = await userService.findAllUsers();
     return res.json(users);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
+  
+})
 
-export const createUser = async (req, res) => {
+export const createUser = catchAsync(async (req, res) => {
  
   const { hasError, errorMessages, passengerData } = validatePartialUser(req.body)
  
@@ -30,24 +28,18 @@ export const createUser = async (req, res) => {
       message: errorMessages
     })
    }
-  try {
+ 
     const user = await userService.createUser(req.body);
     return res.status(201).json(user);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
+ 
+});
 
-export const findOneUser = async (req, res,next) => {
-  try {
+export const findOneUser = catchAsync(async (req, res,next) => {
     const { user } = req;
     return res.json(user);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
+});
 
-export const updateUser = async (req, res) => {
+export const updateUser = catchAsync(async(req, res) => {
  
   const { hasError, errorMessages, passengerData } = validatePartialUser(req.body)
  
@@ -57,32 +49,24 @@ export const updateUser = async (req, res) => {
       message: errorMessages
     })
    }
-
-
-  try {
     const { user } = req;
-
     const updatedUser = await userService.updateUser(user, req.body);
     return res.json(updatedUser);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
+  
+});
 
-export const deleteUser = async (req, res) => {
-  try {
+export const deleteUser = catchAsync(async (req, res) => {
+
     const { user } = req;
 
     await userService.deleteUser(user);
 
     return res.status(204).json(null);
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
 
-export const login = async(req,res) => {
-  try {
+});
+
+export const login = catchAsync(async(req,res) => {
+
     const {hasError,errorMessages,userData} = validateLogin(req.body)
 
     if(hasError){
@@ -102,10 +86,7 @@ export const login = async(req,res) => {
      )
 
      if (!isCorrectPassword){
-       return res.status(401).json({
-        status: "error",
-        message:"Incorrect email or password"
-       })
+       return next(new AppError("Incorrect email or password"))
      }
 
      const token = await generateJWT(user.id)
@@ -120,14 +101,9 @@ export const login = async(req,res) => {
       }
   })
 
-  } catch (error) {
-    
-  }
+})
 
-}
-
-export const register = async (req, res) => {
-  try {
+export const register = catchAsync(async (req, res) => {
   const { hasError, errorMessages, userData } = validatePartialUser(req.body)
  
    if(hasError){
@@ -151,14 +127,9 @@ export const register = async (req, res) => {
           role: user.role
         }
     })
-  } catch (error) {
-    return res.status(500).json(error);
-  }
-};
+});
 
-export const changePassword = async (req, res) => {
-
-  try {
+export const changePassword = catchAsync(async (req, res) => {
       const { sessionUser } = req;
 
 
@@ -186,7 +157,4 @@ export const changePassword = async (req, res) => {
       return res.status(200).json({
           message: 'The user password was updated succesfully'
       })
-  } catch (error) {
-      return res.status(500).json(error)
-  }
-}
+})

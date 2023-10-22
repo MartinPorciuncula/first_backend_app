@@ -1,21 +1,18 @@
 import { validatePartialRepair, validateRepair } from "./repairs.schema.js"
 import { RepairService } from "./repairs_service.js"
-
+import { catchAsync } from "../errors/catchAsync.js"
 const repairService = new RepairService()
 
-export const findPending = async (_, res) => {
+export const findPending = catchAsync(async (_, res) => {
 
-    try {
         const repair = await repairService.findPending()
         return res.json(repair)
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
+   
+})
 
-export const createRepair = async (req, res) => {
+export const createRepair = catchAsync(async(req, res) => {
 
-    try {
+ 
 
         const { hasError, errorMessages, repairData } = validateRepair(req.body)
 
@@ -29,24 +26,15 @@ export const createRepair = async (req, res) => {
         const repair = await repairService.createRepair(req.body)
 
         return res.status(201).json(repair)
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
+})
 
-export const findOne = async (req, res) => {
-
-    try {
+export const findOne = catchAsync(async (req, res) => {
         const {repair} = req;
 
         return res.json(repair)
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
+})
 
-export const updateRepair = async (req, res) => {
-    try {
+export const updateRepair = catchAsync(async (req, res) => {
 
         const { hasError, errorMessages, dataRepair } = validatePartialRepair(req.body)
 
@@ -62,13 +50,11 @@ export const updateRepair = async (req, res) => {
         const updateRepair = await repairService.updateRepair(repair, dataRepair)
 
         return res.json(updateRepair)
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
 
-export const deleteRepair = async (req, res) => {
-    try {
+})
+
+export const deleteRepair = catchAsync(async (req, res) => {
+ 
         
 
         const {repair} = req;
@@ -76,7 +62,4 @@ export const deleteRepair = async (req, res) => {
         await repairService.deleteRepair(repair)
 
         return res.status(204).json()
-    } catch (error) {
-        return res.status(500).json(error)
-    }
-}
+})
