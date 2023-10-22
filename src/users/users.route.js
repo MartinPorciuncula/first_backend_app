@@ -17,8 +17,8 @@ export const router = Router();
 
 
 router.post('/login', login)
-router.use(protect)
 router.post("/register",register)
+router.use(protect)
 router.patch('/change-password',changePassword)
 
 router
