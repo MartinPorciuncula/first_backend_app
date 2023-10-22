@@ -14,9 +14,10 @@ import { ValidateExistingUser } from "./users.middleware.js";
 
 export const router = Router();
 
-router.use(protect)
+
 
 router.post('/login', login)
+router.use(protect)
 router.post("/register",register)
 router.patch('/change-password',changePassword)
 
