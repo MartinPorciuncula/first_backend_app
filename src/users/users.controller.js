@@ -106,7 +106,7 @@ export const login = catchAsync(async(req,res) => {
 })
 
 export const register = catchAsync(async (req, res) => {
-  const { hasError, errorMessages, userData } = validatePartialUser(req.body)
+  const { hasError, errorMessages, userData } = validateRegister(req.body)
  
    if(hasError){
     return res.status(422).json({
@@ -116,7 +116,7 @@ export const register = catchAsync(async (req, res) => {
    }
  
 
-    const user = await userService.createRegisterUser(userData);
+    const user = await userService.createUser(userData);
 
     const token = await generateJWT(user.id)
 

@@ -30,11 +30,10 @@ export const createRepair = catchAsync(async(req, res) => {
 
 export const findOne = catchAsync(async (req, res) => {
        
-                const { repair } = req.params
+                const { id } = req.params
         
-                const repaired = await repairService.findOneRepair(id)
-
-        
+                const repair = await repairService.findOneRepair(id)
+                
                 return res.json(repair)
         })
        
