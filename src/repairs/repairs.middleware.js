@@ -1,9 +1,10 @@
 import { AppError } from "../errors/appError.js";
+import { catchAsync } from "../errors/catchAsync.js";
 import { RepairService } from "./repairs_service.js";
 
 const repairService = new RepairService()
 
-export const validatingStatusPending = async (req,res,next) => {
+export const validatingStatusPending = catchAsync(async (req,res,next) => {
     const { id } = req.params
 
     const repair = await repairService.findOneRepair(id)
@@ -13,4 +14,4 @@ export const validatingStatusPending = async (req,res,next) => {
     }
     req.repair = repair
     next()
-}
+})
