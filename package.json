@@ -19,6 +19,7 @@
     "express": "^4.18.2",
     "framework": "^0.6.0",
     "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "promisify": "^0.0.3",

@@ -33,10 +33,13 @@ export const createUser = catchAsync(async (req, res) => {
  
 });
 
-export const findOneUser = catchAsync(async (req, res,next) => {
-    const { user } = req;
-    return res.json(user);
-});
+export const findOneUser = catchAsync(async(req, res, next) => {
+  const { id } = req.params;
+
+  const user = await userService.findOneUser(id)
+
+  return res.json(user)
+})
 
 export const updateUser = catchAsync(async(req, res) => {
  

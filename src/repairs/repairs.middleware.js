@@ -4,14 +4,20 @@ import { RepairService } from "./repairs_service.js";
 
 const repairService = new RepairService()
 
-export const validatingStatusPending = catchAsync(async (req,res,next) => {
-    const { id } = req.params
+export const validatingStatusPending = async (req, res, next) => {
 
+    const { id } = req.params;
+  
     const repair = await repairService.findOneRepair(id)
-
+  
     if (!repair) {
-        return next(new AppError(`Repair whit id ${id} not found`,404))
+        return res.status(404).json({
+            status: 'error',
+            message: `Repair whit id ${id} not found`
+        })
     }
+  
     req.repair = repair
+  
     next()
-})
+  }

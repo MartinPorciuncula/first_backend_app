@@ -7,20 +7,25 @@ import { promisify } from "util";
 
 const userService = new UserServices();
 
-export const ValidateExistingUser = catchAsync(async (req, res, next) => {
+export const ValidateExistingUser = async (req, res, next) => {
+
   const { id } = req.params;
 
-  const user = await userService.findOneUser(id);
+  const user = await userService.findOneUser(id)
 
   if (!user) {
-    return next(new AppError(`user with id ${id} not found`,404))
+      return res.status(404).json({
+          status: 'error',
+          message: `User whit id ${id} not found`
+      })
   }
 
-  req.user = user;
-  next();
-});
+  req.user = user
 
-export const protect = catchAsync(async (req, res, next) => {
+  next()
+}
+
+export const protect =(async (req, res, next) => {
   let token;
 
   if (
