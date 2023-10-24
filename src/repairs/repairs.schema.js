@@ -2,7 +2,7 @@ import z from 'zod'
 import { extractValidationData } from '../commons/utils/extractErrorData.js'
 
 export const repairSchema = z.object({
-    date: z.date({
+    date: z.string({
         invalid_type_error: "Date must be a correct format",
         required_error: "Date is required"
     }),

@@ -1,3 +1,5 @@
+import { Op } from "sequelize"
+import User from "../users/users.model.js"
 import Repairs from "./repairs.model.js"
 
 export class RepairService {
@@ -30,6 +32,20 @@ export class RepairService {
 
     async deleteRepair(repair) {
         return await repair.update({ status: 'canceled' })
+    }
+
+    async findAllWithAllData(){
+        return await Repairs.findAll({
+            where:{
+                status:{
+                    [Op.notIn]: ["canceled"]
+                },
+            },
+          include: [{
+                model:User,
+               attributes: ["name","email","status","role"]
+          }]
+        });
     }
 
 }

@@ -5,7 +5,7 @@ const repairService = new RepairService()
 
 export const findPending = catchAsync(async (_, res) => {
 
-        const repair = await repairService.findPending()
+        const repair = await repairService.findAllWithAllData()
         return res.json(repair)
    
 })

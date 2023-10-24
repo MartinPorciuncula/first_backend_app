@@ -31,11 +31,6 @@ const Repairs = sequelize.define('repairs', {
         type: DataTypes.INTEGER,
         allowNull:false,
         field:"User_Id",
-    },
-    createdBy: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        field: 'created_by'
     }
 })
 
