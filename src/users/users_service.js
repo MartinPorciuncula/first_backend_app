@@ -26,21 +26,16 @@ export class UserServices {
     return await User.update({ status: "disabled" });
   }
 
-  async createRegisterUser(data){
-  return await User.create(data)
+  async createRegisterUser(data) {
+    return await User.create(data);
   }
 
-  async findOneByEmail(email){
-  return User.findOne({
-    where: {
-       email,
-       status: "available"
-    }
-  })
+  async findOneByEmail(email) {
+    return User.findOne({
+      where: {
+        email,
+        status: "available",
+      },
+    });
   }
-
-  
-  
 }
-
-

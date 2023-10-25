@@ -1,7 +1,7 @@
 import { DataTypes, INTEGER } from "sequelize";
 import { sequelize } from "../config/database/database.js";
 
-const Error = sequelize.define('errors', {
+const Error = sequelize.define("errors", {
   id: {
     primaryKey: true,
     allowNull: false,
@@ -10,16 +10,16 @@ const Error = sequelize.define('errors', {
   },
   status: {
     type: DataTypes.STRING(10),
-    allowNull: true
+    allowNull: true,
   },
   message: {
     type: DataTypes.TEXT,
-    allowNull: true
+    allowNull: true,
   },
   stack: {
     type: DataTypes.TEXT,
-    allowNull: true
-  }
-})
+    allowNull: true,
+  },
+});
 
-export default Error
+export default Error;

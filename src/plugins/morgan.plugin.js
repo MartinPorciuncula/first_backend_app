@@ -1,5 +1,5 @@
-import morgan from 'morgan'
+import morgan from "morgan";
 
 export const enableMorgan = (app) => {
-  app.use(morgan('dev'))
-}
+  app.use(morgan("dev"));
+};
